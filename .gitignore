@@ -1,6 +1,7 @@
 *.pyc
 .idea
 .Python
+.vscode/
 bin/
 include/
 lib/

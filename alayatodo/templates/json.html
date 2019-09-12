@@ -1,0 +1,12 @@
+{% extends "layout.html" %} {% block content %}
+<div class="col-md-4 col-md-offset-4">
+    <h1>Todo:</h1>
+    <table class="table table-striped">
+        <th>Json format</th>
+        <tr>
+            <td>{id: {{ todo.id }}, user_id: {{ todo.user_id }}, description: "{{ todo.description }}"}</td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}

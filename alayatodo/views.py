@@ -51,6 +51,13 @@ def todo(id):
     return render_template('todo.html', todo=todo)
 
 
+@app.route('/todo/<id>/json', methods=['GET'])
+def todo_json(id):
+    cur = g.db.execute("SELECT * FROM todos WHERE id ='%s'" % id)
+    todo = cur.fetchone()
+    return render_template('json.html', todo=todo)
+
+
 @app.route('/todo', methods=['GET'])
 @app.route('/todo/', methods=['GET'])
 def todos():
