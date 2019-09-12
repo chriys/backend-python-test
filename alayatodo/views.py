@@ -7,6 +7,8 @@ from flask import (
     request,
     session
     )
+from flask_paginate import Pagination, get_page_args
+
 from forms import CreateTodoForm
 
 
@@ -59,14 +61,24 @@ def todo_json(id):
     return render_template('json.html', todo=todo)
 
 
-@app.route('/todo', methods=['GET'])
 @app.route('/todo/', methods=['GET'])
+@app.route('/todo', methods=['GET'])
 def todos():
     if not session.get('logged_in'):
         return redirect('/login')
-    cur = g.db.execute("SELECT * FROM todos")
+
+    page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+
+    todos_count = g.db.execute("SELECT COUNT(*) as total FROM todos").fetchone()
+
+    cur = g.db.execute("SELECT * FROM todos LIMIT %s, %s" % (offset, offset + per_page))
     todos = cur.fetchall()
-    return render_template('todos.html', todos=todos)
+
+    pagination = Pagination(page=page, total=todos_count[0], record_name='todos', per_page=per_page,
+                            css_framework='bootstrap', bs_version=3)
+
+    return render_template('todos.html', todos=todos, page=page, pagination=pagination)
 
 
 @app.route('/todo', methods=['POST'])
