@@ -3,3 +3,5 @@ Jinja2
 docopt
 WTForms
 flask-paginate
+Flask-SQLAlchemy
+Flask-Migrate
