@@ -78,7 +78,7 @@ def todos():
     pagination = Pagination(page=page, total=todos_count[0], record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
 
-    return render_template('todos.html', todos=todos, page=page, pagination=pagination)
+    return render_template('todos.html', todos=todos, page=page, pagination=pagination, last=pagination.total_pages)
 
 
 @app.route('/todo', methods=['POST'])
@@ -97,7 +97,13 @@ def todos_POST():
         g.db.commit()
         flash('Todo successfully created!')
 
-    return redirect('/todo')
+    # create a paginator to redirect the user to the last page after a todo has been added
+    todos_count = g.db.execute("SELECT COUNT(*) as total FROM todos").fetchone()
+    page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+    pagination = Pagination(page=page, total=todos_count[0], per_page=per_page)
+
+    return redirect('/todo?page=%s' % pagination.total_pages)
 
 
 @app.route('/todo/<id>', methods=['POST'])
