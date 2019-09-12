@@ -6,11 +6,8 @@ from sqlalchemy import (
     )
 from sqlalchemy.orm import relationship
 from sqlalchemy.inspection import inspect
-from alayatodo.database import Base
-
-def object_as_dict(obj):
-    return {c.key: getattr(obj, c.key)
-            for c in inspect(obj).mapper.column_attrs}
+from sqlalchemy.sql.functions import func
+from alayatodo.database import Base, db_session
 
 class User(Base):
     __tablename__ = 'users'
@@ -38,3 +35,11 @@ class Todo(Base):
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)
+
+def get_todos_count():
+    # db_session.query
+    return db_session.query(func.count(Todo.id)).scalar()
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}

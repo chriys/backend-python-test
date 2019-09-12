@@ -10,7 +10,7 @@ from flask import (
 from flask_paginate import Pagination, get_page_args
 
 from forms import CreateTodoForm
-from alayatodo.models import object_as_dict, Todo, User
+from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
 
 
@@ -68,11 +68,9 @@ def todos():
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
 
-    todos_count = g.db.execute("SELECT COUNT(*) as total FROM todos").fetchone()
-
     todos = Todo.query.offset(offset).limit(offset + per_page).all()
 
-    pagination = Pagination(page=page, total=todos_count[0], record_name='todos', per_page=per_page,
+    pagination = Pagination(page=page, total=get_todos_count(), record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
 
     return render_template('todos.html', todos=todos, page=page, pagination=pagination, last=pagination.total_pages)
@@ -93,10 +91,9 @@ def todos_POST():
         flash('Todo successfully created!')
 
     # create a paginator to redirect the user to the last page after a todo has been added
-    todos_count = g.db.execute("SELECT COUNT(*) as total FROM todos").fetchone()
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
-    pagination = Pagination(page=page, total=todos_count[0], per_page=per_page)
+    pagination = Pagination(page=page, total=get_todos_count(), per_page=per_page)
 
     return redirect('/todo?page=%s' % pagination.total_pages)
 
