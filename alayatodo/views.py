@@ -10,7 +10,8 @@ from flask import (
 from flask_paginate import Pagination, get_page_args
 
 from forms import CreateTodoForm
-from alayatodo.models import Todo
+from alayatodo.models import object_as_dict, Todo, User
+from alayatodo.database import db_session
 
 
 @app.route('/')
@@ -30,11 +31,9 @@ def login_POST():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    sql = "SELECT * FROM users WHERE username = '%s' AND password = '%s'";
-    cur = g.db.execute(sql % (username, password))
-    user = cur.fetchone()
+    user = User.query.filter(User.username == username, User.password == password).first()
     if user:
-        session['user'] = dict(user)
+        session['user'] = object_as_dict(user)
         session['logged_in'] = True
         return redirect('/todo')
 
@@ -71,8 +70,7 @@ def todos():
 
     todos_count = g.db.execute("SELECT COUNT(*) as total FROM todos").fetchone()
 
-    cur = g.db.execute("SELECT * FROM todos LIMIT %s, %s" % (offset, offset + per_page))
-    todos = cur.fetchall()
+    todos = Todo.query.offset(offset).limit(offset + per_page).all()
 
     pagination = Pagination(page=page, total=todos_count[0], record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
@@ -89,11 +87,9 @@ def todos_POST():
     form = CreateTodoForm(request.form)
 
     if form.validate():
-        g.db.execute(
-            "INSERT INTO todos (user_id, description) VALUES ('%s', '%s')"
-            % (session['user']['id'], form.description.data)
-        )
-        g.db.commit()
+        todo = Todo(session['user']['id'], form.description.data)
+        db_session.add(todo)
+        db_session.commit()
         flash('Todo successfully created!')
 
     # create a paginator to redirect the user to the last page after a todo has been added
@@ -109,7 +105,7 @@ def todos_POST():
 def todo_delete(id):
     if not session.get('logged_in'):
         return redirect('/login')
-    g.db.execute("DELETE FROM todos WHERE id ='%s'" % id)
-    g.db.commit()
+    db_session.delete(Todo.query.filter(Todo.id == id).first())
+    db_session.commit()
     flash('Todo successfully deleted!')
     return redirect('/todo')

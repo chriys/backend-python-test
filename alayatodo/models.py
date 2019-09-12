@@ -5,7 +5,12 @@ from sqlalchemy import (
     ForeignKey
     )
 from sqlalchemy.orm import relationship
+from sqlalchemy.inspection import inspect
 from alayatodo.database import Base
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
 
 class User(Base):
     __tablename__ = 'users'
@@ -27,7 +32,7 @@ class Todo(Base):
     # user = relationship(User, primaryjoin=user_id == User.id)
     description = Column(String(255))
 
-    def __init__(self, username=None, description=None):
+    def __init__(self, user_id=None, description=None):
         self.user_id = user_id
         self.description = description
 
