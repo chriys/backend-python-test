@@ -26,8 +26,8 @@ class User(Base):
 class Todo(Base):
     __tablename__ = 'todos'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer)
-    # user = relationship(User, primaryjoin=user_id == User.id)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(User, primaryjoin=user_id == User.id)
     description = Column(String(255))
     completed = Column(Boolean(create_constraint=True))
 
