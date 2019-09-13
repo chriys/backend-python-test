@@ -9,6 +9,8 @@ import subprocess
 import os
 
 from alayatodo import app
+from alayatodo.models import User
+from alayatodo.database import db_session
 
 
 def _run_sql(filename):
@@ -22,12 +24,20 @@ def _run_sql(filename):
         print ex.output
         os.exit(1)
 
+def encrypt_passwords():
+    users = User.query.all()
+    for user in users:
+        user.set_password(user.password)
+    db_session.add_all(users)
+    db_session.commit()
+
 
 if __name__ == '__main__':
     args = docopt(__doc__)
     if args['initdb']:
         _run_sql('resources/database.sql')
         _run_sql('resources/fixtures.sql')
+        encrypt_passwords()
         print "AlayaTodo: Database initialized."
     else:
         app.run(use_reloader=True)
