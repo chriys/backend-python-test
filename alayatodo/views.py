@@ -105,3 +105,14 @@ def todo_delete(id):
     db_session.commit()
     flash('Todo successfully deleted!')
     return redirect('/todo')
+
+@app.route('/complete-todo/<id>', methods=['POST'])
+def todo_complete(id):
+    if not session.get('logged_in'):
+        return redirect('/login')
+    todo = Todo.query.filter(Todo.id == id).first()
+    todo.completed = True
+    db_session.add(todo)
+    db_session.commit()
+    flash('Todo successfully completed!')
+    return redirect('/todo')

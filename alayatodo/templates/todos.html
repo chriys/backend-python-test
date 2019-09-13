@@ -6,14 +6,26 @@
         <th>User</th>
         <th>Description</th>
         <th></th>
+        <th></th>
         {% for todo in todos %}
         <tr>
             <td>{{ todo.id }}</td>
             <td>{{ todo.user_id }}</td>
             <td>
                 <a href="{{ url_for('todo', id=todo.id) }}">
-                       {{ todo.description }}
-                    </a>
+                    {% if todo.completed %}
+                        <del>{{ todo.description }}</del>
+                    {% else %}
+                        {{ todo.description }}
+                    {% endif %}
+                </a>
+            </td>
+            <td>
+                <form method="post" action="{{ url_for('todo_complete', id=todo.id) }}">
+                    <button type="submit" class="btn btn-xs btn-success" {{ 'disabled' if todo.completed else '' }}>
+                        <span class="glyphicon glyphicon-ok glyphicon-white"></span>
+                    </button>
+                </form>
             </td>
             <td>
                 <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
@@ -35,7 +47,7 @@
     </table>
     <!-- show pagination links & infos -->
     <div class="text-center">
-        {{ pagination.info }} {{ pagination.links }} {{ last }}
+        {{ pagination.info }} {{ pagination.links }}
     </div>
 </div>
 {% endblock %}

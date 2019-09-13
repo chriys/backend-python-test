@@ -7,17 +7,25 @@
         <th>Description</th>
         <th></th>
         <th></th>
+        <th></th>
         <tr>
             <td>{{ todo.id }}</td>
             <td>{{ todo.user_id }}</td>
             <td>{{ todo.description }}</td>
             <td>
-                <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
-                    <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+                <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>
+            </td>
+            <td>
+                <form method="post" action="{{ url_for('todo_complete', id=todo.id) }}">
+                    <button type="submit" class="btn btn-xs btn-success" {{ 'disabled' if todo.completed else '' }}>
+                        <span class="glyphicon glyphicon-ok glyphicon-white"></span>
+                    </button>
                 </form>
             </td>
             <td>
-                <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>
+                <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
+                    <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+                </form>
             </td>
         </tr>
     </table>

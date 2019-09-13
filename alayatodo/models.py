@@ -2,7 +2,8 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    ForeignKey
+    ForeignKey,
+    Boolean
     )
 from sqlalchemy.orm import relationship
 from sqlalchemy.inspection import inspect
@@ -28,10 +29,12 @@ class Todo(Base):
     user_id = Column(Integer)
     # user = relationship(User, primaryjoin=user_id == User.id)
     description = Column(String(255))
+    completed = Column(Boolean(create_constraint=True))
 
-    def __init__(self, user_id=None, description=None):
+    def __init__(self, user_id=None, description=None, completed=False):
         self.user_id = user_id
         self.description = description
+        self.completed = completed
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)
