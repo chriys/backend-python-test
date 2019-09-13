@@ -7,6 +7,7 @@ Create Date: 2019-09-12 20:52:34.032735
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.sql import expression
 
 
 # revision identifiers, used by Alembic.
@@ -17,7 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('todos', sa.Column('completed', sa.Boolean(create_constraint=False)))
+    op.add_column('todos', sa.Column('completed', sa.Boolean(create_constraint=False), server_default=expression.false()))
 
 
 def downgrade():
