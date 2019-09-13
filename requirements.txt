@@ -4,3 +4,4 @@ docopt
 WTForms
 flask-paginate
 Flask-SQLAlchemy
+flask-bcrypt

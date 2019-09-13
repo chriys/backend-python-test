@@ -9,6 +9,10 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.inspection import inspect
 from sqlalchemy.sql.functions import func
 from alayatodo.database import Base, db_session
+from alayatodo import app
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
 
 class User(Base):
     __tablename__ = 'users'
@@ -22,6 +26,9 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r>' % (self.username)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
 class Todo(Base):
     __tablename__ = 'todos'
@@ -40,7 +47,6 @@ class Todo(Base):
         return '<Todo %r>' % (self.description)
 
 def get_todos_count():
-    # db_session.query
     return db_session.query(func.count(Todo.id)).scalar()
 
 def object_as_dict(obj):

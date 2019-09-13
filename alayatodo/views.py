@@ -28,10 +28,9 @@ def login():
 @app.route('/login', methods=['POST'])
 def login_POST():
     username = request.form.get('username')
-    password = request.form.get('password')
 
-    user = User.query.filter(User.username == username, User.password == password).first()
-    if user:
+    user = User.query.filter(User.username == username).first()
+    if user and user.check_password(request.form.get('password')):
         session['user'] = object_as_dict(user)
         session['logged_in'] = True
         return redirect('/todo')
@@ -72,7 +71,7 @@ def todos():
     pagination = Pagination(page=page, total=get_todos_count(), record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
 
-    return render_template('todos.html', todos=todos, page=page, pagination=pagination, last=pagination.total_pages)
+    return render_template('todos.html', todos=todos, page=page, pagination=pagination)
 
 
 @app.route('/todo', methods=['POST'])
