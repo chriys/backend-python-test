@@ -1,6 +1,5 @@
 from alayatodo import app
 from flask import (
-    g,
     flash,
     redirect,
     render_template,
