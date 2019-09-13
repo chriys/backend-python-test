@@ -66,9 +66,9 @@ def todos():
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
 
-    todos = Todo.query.offset(offset).limit(offset + per_page).all()
+    todos = Todo.query.filter(Todo.user_id == session['user']['id']).offset(offset).limit(offset + per_page).all()
 
-    pagination = Pagination(page=page, total=get_todos_count(), record_name='todos', per_page=per_page,
+    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
 
     return render_template('todos.html', todos=todos, page=page, pagination=pagination)
@@ -91,7 +91,7 @@ def todos_POST():
     # create a paginator to redirect the user to the last page after a todo has been added
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
-    pagination = Pagination(page=page, total=get_todos_count(), per_page=per_page)
+    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), per_page=per_page)
 
     return redirect('/todo?page=%s' % pagination.total_pages)
 

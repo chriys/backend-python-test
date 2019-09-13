@@ -3,14 +3,12 @@
     <h1>Todo:</h1>
     <table class="table table-striped">
         <th>#</th>
-        <th>User</th>
         <th>Description</th>
         <th></th>
         <th></th>
         <th></th>
         <tr>
             <td>{{ todo.id }}</td>
-            <td>{{ todo.user_id }}</td>
             <td>{{ todo.description }}</td>
             <td>
                 <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>

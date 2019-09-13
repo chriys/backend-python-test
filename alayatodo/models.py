@@ -19,6 +19,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
+    todos = relationship('Todo')
 
     def __init__(self, username=None, password=None):
         self.username = username
@@ -46,8 +47,8 @@ class Todo(Base):
     def __repr__(self):
         return '<Todo %r>' % (self.description)
 
-def get_todos_count():
-    return db_session.query(func.count(Todo.id)).scalar()
+def get_todos_count(user_id):
+    return db_session.query(func.count(Todo.id)).filter(Todo.user_id == user_id).scalar()
 
 def object_as_dict(obj):
     return {c.key: getattr(obj, c.key)

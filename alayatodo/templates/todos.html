@@ -3,14 +3,12 @@
     <h1>Todo List:</h1>
     <table class="table table-striped">
         <th>#</th>
-        <th>User</th>
         <th>Description</th>
         <th></th>
         <th></th>
         {% for todo in todos %}
         <tr>
             <td>{{ todo.id }}</td>
-            <td>{{ todo.user_id }}</td>
             <td>
                 <a href="{{ url_for('todo', id=todo.id) }}">
                     {% if todo.completed %}
