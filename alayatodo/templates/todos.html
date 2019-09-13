@@ -37,7 +37,7 @@
             <form method="post" action="{{ url_for('todos_POST') }}">
                 <td colspan="3">
                     <input type="textbox" name="description" class="small-6 small-center" placeholder="Description...">
-                    {% if form.description.errors %}
+                    {% if form and form.description.errors %}
                         {% for error in form.description.errors %}
                             <p class="text-danger">{{ error }}</p>
                         {% endfor %}
