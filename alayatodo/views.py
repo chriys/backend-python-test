@@ -70,7 +70,6 @@ def todos():
 
     pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
-
     return render_template('todos.html', todos=todos, page=page, pagination=pagination)
 
 
