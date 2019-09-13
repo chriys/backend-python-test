@@ -79,6 +79,12 @@ def todos_POST():
     if not session.get('logged_in'):
         return redirect('/login')
 
+    # create a paginator to redirect the user to the last page after a todo has been added
+    page, per_page, offset = get_page_args(page_parameter='page',
+                                        per_page_parameter='per_page')
+    todos = Todo.query.filter(Todo.user_id == session['user']['id']).offset(offset).limit(offset + per_page).all()
+    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), per_page=per_page)
+
     form = CreateTodoForm(request.form)
 
     if form.validate():
@@ -86,13 +92,9 @@ def todos_POST():
         db_session.add(todo)
         db_session.commit()
         flash('Todo successfully created!')
+        return redirect('/todo?page=%s' % pagination.total_pages)
 
-    # create a paginator to redirect the user to the last page after a todo has been added
-    page, per_page, offset = get_page_args(page_parameter='page',
-                                           per_page_parameter='per_page')
-    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), per_page=per_page)
-
-    return redirect('/todo?page=%s' % pagination.total_pages)
+    return render_template('todos.html', form=form, todos=todos, page=page, pagination=pagination)
 
 
 @app.route('/todo/<id>', methods=['POST'])

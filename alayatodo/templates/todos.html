@@ -12,9 +12,9 @@
             <td>
                 <a href="{{ url_for('todo', id=todo.id) }}">
                     {% if todo.completed %}
-                        <del>{{ todo.description }}</del>
+                    <del>{{ todo.description }}</del>
                     {% else %}
-                        {{ todo.description }}
+                    {{ todo.description }}
                     {% endif %}
                 </a>
             </td>
@@ -27,7 +27,8 @@
             </td>
             <td>
                 <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
-                    <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+                    <button type="submit" class="btn btn-xs btn-danger"><span
+                            class="glyphicon glyphicon-remove glyphicon-white"></span></button>
                 </form>
             </td>
         </tr>
@@ -36,6 +37,11 @@
             <form method="post" action="{{ url_for('todos_POST') }}">
                 <td colspan="3">
                     <input type="textbox" name="description" class="small-6 small-center" placeholder="Description...">
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <p class="text-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
                 </td>
                 <td>
                     <button type="submit" class="btn btn-sm btn-primary">Add</button>
