@@ -23,7 +23,7 @@ def login():
     user = User.query.filter_by(username=request.form.get('username')).first()
 
     form = LoginForm(request.form)
-    if form.validate():
+    if form.validate_on_submit():
         # move to user.authenticate
         if user and user.check_password(request.form.get('password')):
             login_user(user)
@@ -88,7 +88,7 @@ def todos_POST():
 
     form = CreateTodoForm(request.form)
 
-    if form.validate():
+    if form.validate_on_submit():
         todo = Todo(current_user.get_id(), form.description.data)
         db_session.add(todo)
         db_session.commit()

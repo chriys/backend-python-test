@@ -2,6 +2,7 @@ from flask import Flask
 import sqlite3
 from alayatodo.database import db_session
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
 # configuration
 DATABASE = '/tmp/alayatodo.db'
@@ -19,6 +20,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 login = LoginManager(app)
 login.login_view = 'login'
+
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 
 @app.teardown_appcontext

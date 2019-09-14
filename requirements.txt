@@ -8,3 +8,4 @@ alembic
 flask-bcrypt
 flask-login
 Werkzeug
+flask-wtf

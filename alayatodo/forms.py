@@ -1,8 +1,9 @@
-from wtforms import validators, Form, TextField, PasswordField, StringField
+from flask_wtf import FlaskForm
+from wtforms import validators, TextField, PasswordField, StringField
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('username', [validators.required()])
     password = PasswordField('password', [validators.required()])
 
-class CreateTodoForm(Form):
+class CreateTodoForm(FlaskForm):
     description = TextField('description', [validators.required(), validators.Length(min=4, max=255)])
