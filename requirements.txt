@@ -7,3 +7,4 @@ Flask-SQLAlchemy
 alembic
 flask-bcrypt
 flask-login
+Werkzeug

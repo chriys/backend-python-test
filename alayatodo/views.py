@@ -1,10 +1,11 @@
 from alayatodo import app
-from flask import flash, redirect, render_template, request, session
+from flask import flash, redirect, render_template, request, session, abort, url_for
 from flask_paginate import Pagination, get_page_args
 from forms import CreateTodoForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
 from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.urls import url_parse
 
 
 @app.route('/')
@@ -14,21 +15,27 @@ def home():
         return render_template('index.html', readme=readme)
 
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('todos'))
+    # get the user
+    user = User.query.filter_by(username=request.form.get('username')).first()
+
+    if user and user.check_password(request.form.get('password')):
+        login_user(user)
+        flash('Logged in successfully!')
+        next = request.args.get('next')
+
+        if not is_safe_url(next):
+            next = url_for('todos')
+
+        return redirect(next or url_for('todos'))
     return render_template('login.html')
 
 
-@app.route('/login', methods=['POST'])
-def login_POST():
-    if current_user.is_authenticated:
-        return redirect('/todo')
-    # get the user
-    user = User.query.filter_by(username=request.form.get('username')).first()
-    if user and user.check_password(request.form.get('password')):
-        login_user(user)
-        return redirect('/todo')
-    return redirect('/login')
+def is_safe_url(url):
+    return url and url_parse(url).netloc != ''
 
 
 @app.route('/logout')
