@@ -1,17 +1,10 @@
 from alayatodo import app
-from flask import (
-    flash,
-    redirect,
-    render_template,
-    request,
-    session
-    )
+from flask import flash, redirect, render_template, request, session
 from flask_paginate import Pagination, get_page_args
-
 from forms import CreateTodoForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 
 @app.route('/')
@@ -45,6 +38,7 @@ def logout():
 
 
 @app.route('/todo/<id>', methods=['GET'])
+@login_required
 def todo(id):
     todo = Todo.query.filter(Todo.id == id).first()
     return render_template('todo.html', todo=todo)
@@ -58,9 +52,8 @@ def todo_json(id):
 
 @app.route('/todo/', methods=['GET'])
 @app.route('/todo', methods=['GET'])
+@login_required
 def todos():
-    if not current_user.is_authenticated:
-        return redirect('/login')
     # create a paginator to redirect the user to the last page after a todo has been added
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
@@ -74,9 +67,8 @@ def todos():
 
 @app.route('/todo', methods=['POST'])
 @app.route('/todo/', methods=['POST'])
+@login_required
 def todos_POST():
-    if not current_user.is_authenticated:
-        return redirect('/login')
     # create a paginator to redirect the user to the last page after a todo has been added
     page, per_page, offset = get_page_args(page_parameter='page',
                                         per_page_parameter='per_page')
@@ -96,18 +88,16 @@ def todos_POST():
 
 
 @app.route('/todo/<id>', methods=['POST'])
+@login_required
 def todo_delete(id):
-    if not current_user.is_authenticated:
-        return redirect('/login')
     db_session.delete(Todo.query.filter(Todo.id == id).first())
     db_session.commit()
     flash('Todo successfully deleted!')
     return redirect('/todo')
 
 @app.route('/complete-todo/<id>', methods=['POST'])
+@login_required
 def todo_complete(id):
-    if not current_user.is_authenticated:
-        return redirect('/login')
     todo = Todo.query.filter(Todo.id == id).first()
     todo.completed = True
     db_session.add(todo)

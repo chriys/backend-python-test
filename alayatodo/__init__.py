@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % app.config['DATABASE']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 login = LoginManager(app)
+login.login_view = 'login'
 
 
 @app.teardown_appcontext
