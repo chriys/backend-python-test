@@ -1,7 +1,7 @@
 from alayatodo import app
 from flask import flash, redirect, render_template, request, session, abort, url_for
 from flask_paginate import Pagination, get_page_args
-from forms import CreateTodoForm
+from forms import CreateTodoForm, LoginForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -22,16 +22,20 @@ def login():
     # get the user
     user = User.query.filter_by(username=request.form.get('username')).first()
 
-    if user and user.check_password(request.form.get('password')):
-        login_user(user)
-        flash('Logged in successfully!')
-        next = request.args.get('next')
+    form = LoginForm(request.form)
+    if form.validate():
+        # move to user.authenticate
+        if user and user.check_password(request.form.get('password')):
+            login_user(user)
+            flash('Logged in successfully!')
+            next = request.args.get('next')
+            if not is_safe_url(next):
+                next = url_for('todos')
+            return redirect(next or url_for('todos'))
+        else:
+            flash("Invalid Username or Password")
 
-        if not is_safe_url(next):
-            next = url_for('todos')
-
-        return redirect(next or url_for('todos'))
-    return render_template('login.html')
+    return render_template('login.html', form=form)
 
 
 def is_safe_url(url):

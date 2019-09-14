@@ -11,6 +11,13 @@
             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
             <input type="password" class="form-control" name="password" placeholder="Password">
         </div>
+
+        <div class="input-group">
+            {% if form and (form.username.errors or form.password.errors) %}
+                <p class="text-danger">Both username and password are required for you to log in.</p>
+            {% endif %}
+        </div>
+
         <div class="form-group">
             <div class="col-sm-12 controls">
                 <button type="submit" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i> login</button>
