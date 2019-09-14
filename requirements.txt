@@ -6,3 +6,4 @@ flask-paginate
 Flask-SQLAlchemy
 alembic
 flask-bcrypt
+flask-login

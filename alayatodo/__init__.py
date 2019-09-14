@@ -1,6 +1,7 @@
 from flask import Flask
 import sqlite3
 from alayatodo.database import db_session
+from flask_login import LoginManager
 
 # configuration
 DATABASE = '/tmp/alayatodo.db'
@@ -15,6 +16,8 @@ app.config.from_object(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % app.config['DATABASE']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+login = LoginManager(app)
 
 
 @app.teardown_appcontext

@@ -11,6 +11,7 @@ from flask_paginate import Pagination, get_page_args
 from forms import CreateTodoForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
+from flask_login import current_user, login_user, logout_user
 
 
 @app.route('/')
@@ -27,21 +28,19 @@ def login():
 
 @app.route('/login', methods=['POST'])
 def login_POST():
-    username = request.form.get('username')
-
-    user = User.query.filter(User.username == username).first()
-    if user and user.check_password(request.form.get('password')):
-        session['user'] = object_as_dict(user)
-        session['logged_in'] = True
+    if current_user.is_authenticated:
         return redirect('/todo')
-
+    # get the user
+    user = User.query.filter_by(username=request.form.get('username')).first()
+    if user and user.check_password(request.form.get('password')):
+        login_user(user)
+        return redirect('/todo')
     return redirect('/login')
 
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
-    session.pop('user', None)
+    logout_user()
     return redirect('/')
 
 
@@ -60,15 +59,15 @@ def todo_json(id):
 @app.route('/todo/', methods=['GET'])
 @app.route('/todo', methods=['GET'])
 def todos():
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return redirect('/login')
-
+    # create a paginator to redirect the user to the last page after a todo has been added
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
 
-    todos = Todo.query.filter(Todo.user_id == session['user']['id']).offset(offset).limit(offset + per_page).all()
+    todos = Todo.query.filter(Todo.user_id == current_user.get_id()).offset(offset).limit(offset + per_page).all()
 
-    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), record_name='todos', per_page=per_page,
+    pagination = Pagination(page=page, total=get_todos_count(current_user.get_id()), record_name='todos', per_page=per_page,
                             css_framework='bootstrap', bs_version=3)
     return render_template('todos.html', todos=todos, page=page, pagination=pagination)
 
@@ -76,19 +75,18 @@ def todos():
 @app.route('/todo', methods=['POST'])
 @app.route('/todo/', methods=['POST'])
 def todos_POST():
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return redirect('/login')
-
     # create a paginator to redirect the user to the last page after a todo has been added
     page, per_page, offset = get_page_args(page_parameter='page',
                                         per_page_parameter='per_page')
-    todos = Todo.query.filter(Todo.user_id == session['user']['id']).offset(offset).limit(offset + per_page).all()
-    pagination = Pagination(page=page, total=get_todos_count(session['user']['id']), per_page=per_page)
+    todos = Todo.query.filter(Todo.user_id == current_user.get_id()).offset(offset).limit(offset + per_page).all()
+    pagination = Pagination(page=page, total=get_todos_count(current_user.get_id()), per_page=per_page)
 
     form = CreateTodoForm(request.form)
 
     if form.validate():
-        todo = Todo(session['user']['id'], form.description.data)
+        todo = Todo(current_user.get_id(), form.description.data)
         db_session.add(todo)
         db_session.commit()
         flash('Todo successfully created!')
@@ -99,7 +97,7 @@ def todos_POST():
 
 @app.route('/todo/<id>', methods=['POST'])
 def todo_delete(id):
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return redirect('/login')
     db_session.delete(Todo.query.filter(Todo.id == id).first())
     db_session.commit()
@@ -108,7 +106,7 @@ def todo_delete(id):
 
 @app.route('/complete-todo/<id>', methods=['POST'])
 def todo_complete(id):
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return redirect('/login')
     todo = Todo.query.filter(Todo.id == id).first()
     todo.completed = True
