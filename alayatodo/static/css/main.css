@@ -15,3 +15,8 @@ body {
     font-size: 12px;
     text-align: center;
 }
+.login-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

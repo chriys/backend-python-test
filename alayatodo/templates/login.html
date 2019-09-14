@@ -13,15 +13,18 @@
             <input type="password" class="form-control" name="password" placeholder="Password">
         </div>
 
+        {% if form and (form.username.errors or form.password.errors) %}
         <div class="input-group">
-            {% if form and (form.username.errors or form.password.errors) %}
-                <p class="text-danger">Both username and password are required for you to log in.</p>
-            {% endif %}
+            <p class="text-danger">Both username and password are required for you to log in.</p>
         </div>
+        {% endif %}
 
         <div class="form-group">
-            <div class="col-sm-12 controls">
-                <button type="submit" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i> login</button>
+            <div class="col-sm-12 controls login-actions">
+                <div>
+                    <a href="{{ url_for('register') }}">Create an account</a>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i> login</button>
             </div>
         </div>
 

@@ -1,7 +1,7 @@
 from alayatodo import app
 from flask import flash, redirect, render_template, request, session, abort, url_for
 from flask_paginate import Pagination, get_page_args
-from forms import CreateTodoForm, LoginForm
+from forms import CreateTodoForm, LoginForm, RegistrationForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -46,6 +46,19 @@ def is_safe_url(url):
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm(request.form)
+    if form.validate_on_submit():
+        user = User(form.username.data)
+        user.set_password(form.password.data)
+        db_session.add(user)
+        db_session.commit()
+        flash('Congratulations, you are now registered with the username: %s' % form.username.data, 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 
 @app.route('/todo/<id>', methods=['GET'])
