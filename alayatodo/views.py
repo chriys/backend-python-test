@@ -27,13 +27,13 @@ def login():
         # move to user.authenticate
         if user and user.check_password(request.form.get('password')):
             login_user(user)
-            flash('Logged in successfully!')
+            flash('Logged in successfully!', 'success')
             next = request.args.get('next')
             if not is_safe_url(next):
                 next = url_for('todos')
             return redirect(next or url_for('todos'))
         else:
-            flash("Invalid Username or Password")
+            flash("Invalid Username or Password", 'danger')
 
     return render_template('login.html', form=form)
 
@@ -92,7 +92,7 @@ def todos_POST():
         todo = Todo(current_user.get_id(), form.description.data)
         db_session.add(todo)
         db_session.commit()
-        flash('Todo successfully created!')
+        flash('Todo successfully created!', 'success')
         return redirect('/todo?page=%s' % pagination.total_pages)
 
     return render_template('todos.html', form=form, todos=todos, page=page, pagination=pagination)
@@ -103,7 +103,7 @@ def todos_POST():
 def todo_delete(id):
     db_session.delete(Todo.query.filter(Todo.id == id).first())
     db_session.commit()
-    flash('Todo successfully deleted!')
+    flash('Todo successfully deleted!', 'success')
     return redirect('/todo')
 
 @app.route('/complete-todo/<id>', methods=['POST'])
@@ -113,5 +113,5 @@ def todo_complete(id):
     todo.completed = True
     db_session.add(todo)
     db_session.commit()
-    flash('Todo successfully completed!')
+    flash('Todo successfully completed!', 'success')
     return redirect('/todo')
