@@ -31,12 +31,23 @@ def encrypt_passwords():
     db_session.add_all(users)
     db_session.commit()
 
+def run_migrations():
+    try:
+        subprocess.check_output(
+            "bin/alembic upgrade heads",
+            stderr=subprocess.STDOUT,
+            shell=True
+        )
+    except subprocess.CalledProcessError, ex:
+        print ex.output
+        os.exit(1)
 
 if __name__ == '__main__':
     args = docopt(__doc__)
     if args['initdb']:
         _run_sql('resources/database.sql')
         _run_sql('resources/fixtures.sql')
+        run_migrations()
         encrypt_passwords()
         print "AlayaTodo: Database initialized."
     else:
