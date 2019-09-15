@@ -62,6 +62,8 @@ class Todo(Base):
     user = relationship(User, primaryjoin=user_id == User.id)
     description = Column(String(255))
     completed_at = Column(DateTime())
+    updated_at = Column(DateTime())
+    created_at = Column(DateTime())
 
     def __init__(self, user_id=None, description=None, completed_at=None):
         self.user_id = user_id
