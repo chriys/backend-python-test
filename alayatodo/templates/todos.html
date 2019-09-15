@@ -5,11 +5,15 @@
         <th>#</th>
         <th>Description</th>
         <th></th>
-        <th></th>
         {% for todo in todos %}
         <tr>
             <td>{{ todo.id }}</td>
-            <td>
+            <td class="todo-body">
+                <div class="checkbox">
+                    <label>
+                        <input class="todo-complete" type="checkbox" value="{{ todo.id }}" {{ 'checked' if todo.completed else '' }}>
+                    </label>
+                </div>
                 <a href="{{ url_for('todo', id=todo.id) }}">
                     {% if todo.completed %}
                     <del>{{ todo.description }}</del>
@@ -17,14 +21,6 @@
                     {{ todo.description }}
                     {% endif %}
                 </a>
-            </td>
-            <td>
-                <form method="post" action="{{ url_for('todo_complete', id=todo.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                    <button type="submit" class="btn btn-xs btn-success" {{ 'disabled' if todo.completed else '' }}>
-                        <span class="glyphicon glyphicon-ok glyphicon-white"></span>
-                    </button>
-                </form>
             </td>
             <td>
                 <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
@@ -38,7 +34,7 @@
         <tr>
             <form method="post" action="{{ url_for('todos_POST') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <td colspan="3">
+                <td colspan="2">
                     <input type="textbox" name="description" class="small-6 small-center" placeholder="Description...">
                     {% if form and form.description.errors %}
                         {% for error in form.description.errors %}

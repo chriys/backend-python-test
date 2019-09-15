@@ -6,7 +6,6 @@ from alayatodo.models import object_as_dict, get_todos_count, Todo, User
 from alayatodo.database import db_session
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from datetime import datetime
 
 
 @app.route('/')
@@ -124,7 +123,7 @@ def todo_delete(id):
 @login_required
 def todo_complete(id):
     todo = Todo.query.filter(Todo.id == id).first()
-    todo.completed_at = datetime.now()
+    todo.toggle_completion()
     db_session.add(todo)
     db_session.commit()
     flash('Todo successfully completed!', 'success')

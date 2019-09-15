@@ -6,19 +6,18 @@
         <th>Description</th>
         <th></th>
         <th></th>
-        <th></th>
         <tr>
             <td>{{ todo.id }}</td>
-            <td>{{ todo.description }}</td>
-            <td>
-                <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>
+            <td class="todo-body">
+                <div class="checkbox">
+                    <label>
+                        <input class="todo-complete" type="checkbox" value="{{ todo.id }}" {{ 'checked' if todo.completed else '' }}>
+                    </label>
+                </div>
+                {{ todo.description }}
             </td>
             <td>
-                <form method="post" action="{{ url_for('todo_complete', id=todo.id) }}">
-                    <button type="submit" class="btn btn-xs btn-success" {{ 'disabled' if todo.completed else '' }}>
-                        <span class="glyphicon glyphicon-ok glyphicon-white"></span>
-                    </button>
-                </form>
+                <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>
             </td>
             <td>
                 <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">

@@ -20,3 +20,11 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+.todo-body {
+    display: flex;
+    align-items: flex-start;
+}
+.todo-body .checkbox {
+    margin-top: 0px;
+    margin-bottom: 5px;
+}

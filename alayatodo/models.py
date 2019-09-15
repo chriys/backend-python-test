@@ -12,6 +12,7 @@ from alayatodo.database import Base, db_session
 from alayatodo import app, login
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
+from datetime import datetime
 
 bcrypt = Bcrypt(app)
 
@@ -73,6 +74,12 @@ class Todo(Base):
     @property
     def completed(self):
         return self.completed_at != None
+
+    def toggle_completion(self):
+        if not self.completed:
+            self.completed_at = datetime.now()
+        else:
+            self.completed_at = None
 
 def get_todos_count(user_id):
     return db_session.query(func.count(Todo.id)).filter(Todo.user_id == user_id).scalar()
