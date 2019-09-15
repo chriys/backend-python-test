@@ -12,7 +12,6 @@ Alayacare Python skill test
 virtualenv .
 bin/pip install -r requirements.txt
 bin/python main.py initdb
-bin/alembic upgrade heads
 bin/python main.py
 ```
 
