@@ -3,7 +3,7 @@ from sqlalchemy import (
     Integer,
     String,
     ForeignKey,
-    Boolean
+    DateTime
     )
 from sqlalchemy.orm import relationship
 from sqlalchemy.inspection import inspect
@@ -60,15 +60,19 @@ class Todo(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, primaryjoin=user_id == User.id)
     description = Column(String(255))
-    completed = Column(Boolean(create_constraint=True))
+    completed_at = Column(DateTime())
 
-    def __init__(self, user_id=None, description=None, completed=False):
+    def __init__(self, user_id=None, description=None, completed_at=None):
         self.user_id = user_id
         self.description = description
-        self.completed = completed
+        self.completed_at = completed_at
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)
+
+    @property
+    def completed(self):
+        return self.completed_at != None
 
 def get_todos_count(user_id):
     return db_session.query(func.count(Todo.id)).filter(Todo.user_id == user_id).scalar()

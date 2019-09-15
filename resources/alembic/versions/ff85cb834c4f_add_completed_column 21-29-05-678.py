@@ -18,8 +18,8 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('todos', sa.Column('completed', sa.Boolean(create_constraint=False), server_default=expression.false()))
+    op.add_column('todos', sa.Column('completed_at', sa.DateTime()))
 
 
 def downgrade():
-    op.drop_column('todos', 'completed')
+    op.drop_column('todos', 'completed_at')
