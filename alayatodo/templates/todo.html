@@ -1,5 +1,7 @@
 {% extends "layout.html" %} {% block content %}
 <div class="col-md-6 col-md-offset-3">
+    <!-- CSRF protection -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <h1>Todo:</h1>
     <table class="table table-striped">
         <th>#</th>
@@ -14,7 +16,9 @@
                         <input class="todo-complete" type="checkbox" value="{{ todo.id }}" {{ 'checked' if todo.completed else '' }}>
                     </label>
                 </div>
-                {{ todo.description }}
+                <span class="todo-{{ todo.id }} {{ 'todo-completed' if todo.completed else '' }}">
+                    {{ todo.description }}
+                </span>
             </td>
             <td>
                 <a href="{{ url_for('todo_json', id=todo.id) }}">json format</a>

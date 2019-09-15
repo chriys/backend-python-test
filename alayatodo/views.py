@@ -1,5 +1,5 @@
 from alayatodo import app
-from flask import flash, redirect, render_template, request, session, abort, url_for
+from flask import flash, redirect, render_template, request, session, abort, url_for, jsonify
 from flask_paginate import Pagination, get_page_args
 from forms import CreateTodoForm, LoginForm, RegistrationForm
 from alayatodo.models import object_as_dict, get_todos_count, Todo, User
@@ -126,5 +126,9 @@ def todo_complete(id):
     todo.toggle_completion()
     db_session.add(todo)
     db_session.commit()
-    flash('Todo successfully completed!', 'success')
-    return redirect('/todo')
+    return jsonify(
+        id=todo.id,
+        completed=todo.completed,
+        completed_at=todo.completed_at,
+        message='Todo successfully completed!'
+    )

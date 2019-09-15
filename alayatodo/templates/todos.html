@@ -14,12 +14,8 @@
                         <input class="todo-complete" type="checkbox" value="{{ todo.id }}" {{ 'checked' if todo.completed else '' }}>
                     </label>
                 </div>
-                <a href="{{ url_for('todo', id=todo.id) }}">
-                    {% if todo.completed %}
-                    <del>{{ todo.description }}</del>
-                    {% else %}
+                <a href="{{ url_for('todo', id=todo.id) }}" class="todo-{{ todo.id }} {{ 'todo-completed' if todo.completed else '' }}">
                     {{ todo.description }}
-                    {% endif %}
                 </a>
             </td>
             <td>
