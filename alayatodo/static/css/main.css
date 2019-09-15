@@ -28,6 +28,10 @@ body {
     margin-top: 0px;
     margin-bottom: 5px;
 }
-.todo-completed {
+.todo-completed span:first-child {
     text-decoration: line-through;
+}
+.todo-timestamp {
+    color: #777;
+    font-size: .95em;
 }

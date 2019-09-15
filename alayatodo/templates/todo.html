@@ -17,7 +17,11 @@
                     </label>
                 </div>
                 <span class="todo-{{ todo.id }} {{ 'todo-completed' if todo.completed else '' }}">
-                    {{ todo.description }}
+                    <span>{{ todo.description }}</span>
+                    <br>
+                    <span class="todo-timestamp">
+                        {{ timeago(todo.created_at) }}
+                    </span>
                 </span>
             </td>
             <td>

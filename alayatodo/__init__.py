@@ -3,6 +3,7 @@ import sqlite3
 from alayatodo.database import db_session
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+import pretty, datetime
 
 # configuration
 DATABASE = '/tmp/alayatodo.db'
@@ -29,5 +30,12 @@ csrf.init_app(app)
 def shutdown_session(exception=None):
     db_session.remove()
 
+@app.context_processor
+def utility_processor():
+
+    def timeago(date):
+        return pretty.date(date)
+
+    return dict(timeago=timeago)
 
 import alayatodo.views

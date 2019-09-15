@@ -80,8 +80,10 @@ class Todo(Base):
     def toggle_completion(self):
         if not self.completed:
             self.completed_at = datetime.now()
+            self.updated_at = datetime.now()
         else:
             self.completed_at = None
+            self.updated_at = datetime.now()
 
 def get_todos_count(user_id):
     return db_session.query(func.count(Todo.id)).filter(Todo.user_id == user_id).scalar()

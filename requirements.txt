@@ -10,3 +10,4 @@ flask-login
 Werkzeug
 flask-wtf
 Safe
+py-pretty==1
