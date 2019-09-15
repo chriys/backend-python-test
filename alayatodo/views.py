@@ -124,11 +124,12 @@ def todo_delete(id):
 def todo_complete(id):
     todo = Todo.query.filter(Todo.id == id).first()
     todo.toggle_completion()
+    flash_message= 'Todo successfully completed!' if todo.completed else ''
     db_session.add(todo)
     db_session.commit()
     return jsonify(
         id=todo.id,
         completed=todo.completed,
         completed_at=todo.completed_at,
-        message='Todo successfully completed!'
+        flash=flash_message
     )
