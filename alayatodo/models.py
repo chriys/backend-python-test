@@ -13,6 +13,8 @@ from alayatodo import app, login
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 from datetime import datetime
+from datetime import datetime
+from dateutil import tz
 
 bcrypt = Bcrypt(app)
 
@@ -63,12 +65,14 @@ class Todo(Base):
     description = Column(String(255))
     completed_at = Column(DateTime())
     updated_at = Column(DateTime())
-    created_at = Column(DateTime())
+    _created_at = Column('created_at', DateTime())
 
-    def __init__(self, user_id=None, description=None, completed_at=None):
+    def __init__(self, user_id=None, description=None, completed_at=None, updated_at=None, created_at=None):
         self.user_id = user_id
         self.description = description
         self.completed_at = completed_at
+        self.updated_at = updated_at
+        self._created_at = created_at
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)
@@ -76,6 +80,17 @@ class Todo(Base):
     @property
     def completed(self):
         return self.completed_at != None
+
+    @property
+    def created_at(self):
+        # add timezone info
+        utc = self._created_at.replace(tzinfo=tz.tzutc())
+        # Convert to local timezone and remove timezone info
+        return utc.astimezone(tz.tzlocal()).replace(tzinfo=None)
+
+    @created_at.setter
+    def created_at(self, created_at):
+        self._created_at = created_at
 
     def toggle_completion(self):
         if not self.completed:
