@@ -21,7 +21,7 @@ The TODO App allows a user to add reminders of thing he needs to do. Here are th
 * All the todos are private, users can't see other user's todos.
 * Users must be logged in order to add/delete/see their todos.
 
-Credentials:
+To test the app use the credentials below or [create an account](/register "create an account"):
 * username: **user1**
 * password: **user1**
 
