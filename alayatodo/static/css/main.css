@@ -28,7 +28,8 @@ body {
     margin-top: 0px;
     margin-bottom: 5px;
 }
-.todo-completed span:first-child {
+.todo-completed span:first-child,
+.crossed-out {
     text-decoration: line-through;
 }
 .todo-timestamp {
@@ -37,4 +38,39 @@ body {
 }
 .table input {
     width: 100%;
+}
+#password-strength span {
+    display: inline-block;
+    width: 30%;
+    height: 7px;
+    margin-right: 1%;
+    background: rgba(0, 0, 0, 0.02);
+    background: rgba(0, 0, 0, 0.04);
+    -webkit-transition: background .2s ease-in-out;
+    -moz-transition: background .2s ease-in-out;
+    -ms-transition: background .2s ease-in-out;
+    transition: background .2s ease-in-out;
+}
+#password.invalid {
+    background: rgba(200,0,0,0.1);
+}
+#password.valid {
+    background: rgba(0,200,0,0.1);
+}
+#password-strength.simple span:first-of-type {
+    background: #EB5E34;
+}
+#password-strength.medium span {
+    background: #FCDB76;
+}
+#password-strength.medium span:last-of-type {
+    background: rgba(0, 0, 0, 0.04);
+}
+#password-strength.strong span {
+    background: #6BAB57;
+}
+#password-message {
+    margin-bottom: 10px;
+    /* color: #9c9c9c; */
+    font-size: 14px;
 }
