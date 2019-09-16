@@ -35,3 +35,6 @@ body {
     color: #777;
     font-size: .95em;
 }
+.table input {
+    width: 100%;
+}
