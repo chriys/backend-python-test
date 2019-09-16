@@ -20,6 +20,13 @@
             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
             <input type="password" class="form-control" name="password" placeholder="Password">
         </div>
+        <div class="input-group">
+            <p class="text-muted">
+                At least 4 characters longs <br>
+                Contains an uppercase character <br>
+                Contains 1 number or symbol
+            </p>
+        </div>
 
         {% if form and form.password.errors %}
         <div class="input-group">
