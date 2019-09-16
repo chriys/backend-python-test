@@ -16,23 +16,9 @@ bin/python main.py
 ```
 
 ### Application
-The TODO App allows a user to add reminders of thing he needs to do. Here are the requirement for the app.
-* Users can add, delete and see their todos.
-* All the todos are private, users can't see other user's todos.
-* Users must be logged in order to add/delete/see their todos.
+The TODO App allows a user to add reminders of thing he needs to do.
+Login or Register to try it out.
 
-To test the app use the credentials below or [create an account](/register "create an account"):
+Test account:
 * username: **user1**
 * password: **user1**
-
-#### Homepage:
-![Homepage](/web/img/homepage.png?raw=true "Homepage")
-
-#### Login page:
-![Login page](/web/img/login-page.png?raw=true "Login page")
-
-#### Todos:
-![Todos](/web/img/todos.png?raw=true "Todos")
-
-### Documentation
-This app use [Flask](http://flask.pocoo.org/docs/0.10/).
