@@ -100,6 +100,9 @@ class Todo(Base):
             self.completed_at = None
             self.updated_at = datetime.now()
 
+    def belongs_to(self, user_id):
+        return self.user_id == user_id
+
 def get_todos_count(user_id):
     return db_session.query(func.count(Todo.id)).filter(Todo.user_id == user_id).scalar()
 

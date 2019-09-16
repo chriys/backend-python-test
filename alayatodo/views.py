@@ -65,12 +65,18 @@ def register():
 @login_required
 def todo(id):
     todo = Todo.query.filter(Todo.id == id).first()
+    if not todo or not todo.belongs_to(current_user.id):
+        flash("Oups... Doesn't look like the todo you're looking for exists.", 'danger')
+        return redirect('/todo')
     return render_template('todo.html', todo=todo)
 
 
 @app.route('/todo/<id>/json', methods=['GET'])
 def todo_json(id):
     todo = Todo.query.filter(Todo.id == id).first()
+    if not todo or not todo.belongs_to(current_user.id):
+        flash("Oups... Doesn't look like the todo you're looking for exists.", 'danger')
+        return redirect('/todo')
     return render_template('json.html', todo=todo)
 
 
@@ -114,7 +120,11 @@ def todos_POST():
 @app.route('/todo/<id>', methods=['POST'])
 @login_required
 def todo_delete(id):
-    db_session.delete(Todo.query.filter(Todo.id == id).first())
+    todo = Todo.query.filter(Todo.id == id).first()
+    if not todo or not todo.belongs_to(current_user.id):
+        flash("Oups... Doesn't look like the todo you're looking for exists.", 'danger')
+        return redirect('/todo')
+    db_session.delete(todo)
     db_session.commit()
     flash('Todo successfully deleted!', 'success')
     return redirect('/todo')
@@ -123,6 +133,10 @@ def todo_delete(id):
 @login_required
 def todo_complete(id):
     todo = Todo.query.filter(Todo.id == id).first()
+    if not todo or not todo.belongs_to(current_user.id):
+        flash_message = "Oups... Doesn't look like the todo you're looking for exists."
+        return jsonify(id=id, completed=False, flash=flash_message)
+
     todo.toggle_completion()
     flash_message= 'Todo successfully completed!' if todo.completed else ''
     db_session.add(todo)

@@ -23,7 +23,7 @@ $(function () {
                 return $('.todo-' + todoId).addClass('todo-completed');
             }
 
-            flash(todo.flash);
+            flash(todo.flash, 'danger');
             return $('.todo-' + todoId).removeClass('todo-completed');
         })
     });
@@ -47,12 +47,12 @@ $(function () {
         });
     }
 
-    function flash(message) {
-        showFlash(message);
+    function flash(message, category = 'success') {
+        showFlash(message, category);
         hideFlash();
     }
 
-    function showFlash(message) {
+    function showFlash(message, category) {
         // remove previous messages
         $('.alert').remove()
 
@@ -60,7 +60,7 @@ $(function () {
             return;
         }
 
-        var flashHtml = "<div class='alert alert-success alert-dismissible fade in text-center' role=alert> \
+        var flashHtml = "<div class='alert alert-" + category + " alert-dismissible fade in text-center' role=alert> \
             <button type=button class=close data-dismiss=alert aria-label=Close><span aria-hidden=true>&times;</span></button> \
             <span class='flash-message'>" + message + "</span></div>";
 
