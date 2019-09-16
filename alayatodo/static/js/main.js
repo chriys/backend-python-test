@@ -8,7 +8,10 @@ $(function () {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken)
             }
         }
-    })
+    });
+
+    // password suggestion helper
+    checkPasswordStrength();
 
     // complete todos
     $('.todo-complete').click(function () {
@@ -24,6 +27,25 @@ $(function () {
             return $('.todo-' + todoId).removeClass('todo-completed');
         })
     });
+
+    function checkPasswordStrength() {
+        var $input = $('#password');
+        var message = document.getElementById('password-message');
+        var strength = document.getElementById('password-strength');
+        $input.keyup(function () {
+            if (!$input.val()) {
+                $input.removeClass('valid')
+                $input.removeClass('invalid')
+                strength.className = '';
+                message.innerHTML = 'password is required';
+                return;
+            }
+            var ret = safe($input.val());
+            $input.addClass(ret.valid ? 'valid' : 'invalid');
+            strength.className = ret.strength;
+            message.innerHTML = ret.message;
+        });
+    }
 
     function flash(message) {
         showFlash(message);
